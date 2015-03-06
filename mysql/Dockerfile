@@ -30,13 +30,17 @@ RUN { \
     && apt-get update && apt-get install -y mysql-server="${MYSQL_VERSION}"* && rm -rf /var/lib/apt/lists/* \
     && rm -rf /var/lib/mysql && mkdir -p /var/lib/mysql
 
-# comment out a few problematic configuration values
-RUN sed -Ei 's/^(bind-address|log)/#&/' /etc/mysql/my.cnf
+ADD config/my.cnf /etc/mysql/my.cnf
 
-VOLUME /var/lib/mysql
+RUN mkdir /data
+VOLUME ["/data/db"]
 
-COPY docker-entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
 
+ADD config/mysql-setup.sql /mysql-setup.sql
+ADD config/mysql-start.sh /mysql-start.sh
+RUN chmod u=rwx /mysql-start.sh && \
+    chown mysql:mysql /mysql-start.sh /mysql-setup.sql /data/db
+
+USER mysql
 EXPOSE 3306
-CMD ["mysqld"]
+ENTRYPOINT ["/mysql-start.sh"]

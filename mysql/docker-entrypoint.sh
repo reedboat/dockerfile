@@ -7,7 +7,11 @@ fi
 
 if [ "$1" = 'mysqld' ]; then
 	# read DATADIR from the MySQL config
-	DATADIR="$("$@" --verbose --help 2>/dev/null | awk '$1 == "datadir" { print $2; exit }')"
+    if [ -z "$DATADIR" ]; then
+        DATADIR="$("$@" --verbose --help 2>/dev/null | awk '$1 == "datadir" { print $2; exit }')"
+    fi
+
+    echo $DATADIR 
 	
 	if [ ! -d "$DATADIR/mysql" ]; then
 		if [ -z "$MYSQL_ROOT_PASSWORD" -a -z "$MYSQL_ALLOW_EMPTY_PASSWORD" ]; then

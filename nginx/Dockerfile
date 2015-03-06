@@ -5,7 +5,7 @@ MAINTAINER "reedboat" <zhqm03@gmail.com>
 WORKDIR /tmp
 
 RUN apt-get update -y && \
-    apt-get install -y nginx
+    apt-get install -y nginx --no-install-recommends
 
 ADD config/nginx.conf /opt/etc/nginx.conf
 ADD config/app.conf /etc/nginx/sites-available/app.conf
