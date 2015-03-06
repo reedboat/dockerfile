@@ -4,8 +4,6 @@ MAINTAINER "reedboat" <zhqm03@gmail.com>
 
 WORKDIR /tmp
 
-COPY config/sources.list /etc/apt/sources.list
-
 RUN apt-get update -y && \
     apt-get install -y nginx
 
